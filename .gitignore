@@ -1,3 +1,9 @@
+# Dependencies & Build Output
+node_modules/
+dist/
+dist-ssr/
+*.local
+
 # OS / Editor files
 .DS_Store
 Thumbs.db

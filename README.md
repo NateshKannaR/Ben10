@@ -1,80 +1,84 @@
 # Ben 10: Omnitrix Experience
 
-Complete offline clone of [ben10-omnitrix-experience.vercel.app](https://ben10-omnitrix-experience.vercel.app/).
+An interactive 3D web experience celebrating Ben 10 and the Omnitrix. Built with **React 18**, **Three.js**, **WebGL**, **Web Audio API**, and **Vite**.
 
-## Overview
+## Features
 
-- **3D Omnitrix Model & Animation**: High-detail 3D Omnitrix model (`models/omnitrix.glb`) and alien crystals (`models/crystals.glb`).
-- **11 Full 3D Alien / Character Models**: Ben Tennyson, Heatblast, Four Arms, XLR8, Diamondhead, Wildmutt, Upgrade, Grey Matter, Stinkfly, Ripjaws, and Cannonbolt.
-- **Custom Shaders & Alien Worlds**: Procedural terrain, sky, and ground shaders for alien planets.
-- **Synthesized Audio**: Dynamic real-time sound effects powered by the Web Audio API (no external sound file dependencies).
-- **Interactive UI**: Dial turning, character transformations, series timeline, alien database, and lore viewer.
-- **Custom Fonts & Vector Graphics**: Includes all offline font assets (`woff2`) and SVG graphics.
+- **Interactive 3D Omnitrix**: Full WebGL 3D model with rotating bezel, pop-up core, glowing green DNA projector, and click sounds.
+- **10 Original Aliens + Ben Tennyson**: 3D GLTF models, species info, planet lore, powers, and combat stat meters.
+- **Synthesized Omnitrix Audio**: Pure Web Audio API procedural sound engine with real-time oscillators, noise bursts, filters, and transformation charges (no external audio file dependencies).
+- **Parallax Hero Landing**: Dynamic mouse-tilt parallax featuring layered character figures and original series artwork.
+- **Complete Timeline & Series Archive**: Chronology covering the Classic Series, Alien Force, Ultimate Alien, and Omniverse with episode counts and lore chapters.
+- **Galvan Lab Modules**: Interactive feature showcases for DNA Scanning, Alien Comparison, and Planetary Simulations.
 
-## How to Run Locally
+## Quick Start (Development)
 
-Because the experience uses JavaScript ES Modules (`type="module"`) and WebGL / Three.js assets (`.glb` models and `.woff2` fonts), it must be served through an HTTP server rather than opened as a `file://` URL.
-
-### Option 1: Using Python (Recommended - No dependencies needed)
+Clone the repository and install dependencies:
 
 ```bash
-python3 serve.py
+git clone https://github.com/NateshKannaR/Ben10.git
+cd Ben10
+npm install
+npm run dev
 ```
-or:
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Build for Production
+
 ```bash
-python3 -m http.server 3000
+npm run build
+npm run preview
 ```
-Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
-### Option 2: Using Node.js (npx serve)
+Or serve with Python without any node dependencies:
 
 ```bash
-npx serve . -p 3000
-```
-or:
-```bash
-npm start
+python3 serve.py 3000
 ```
 
-## Directory Structure
+## Project Structure
 
 ```
-├── index.html                   # Main entry point HTML
-├── serve.py                     # Python local server script
-├── download_website.py          # Asset manifest & re-downloader
-├── package.json                 # Optional npm scripts
-├── assets/                      # JS bundles and CSS stylesheets
-│   ├── index-*.js
-│   ├── Stage-*.js
-│   ├── alienModel-*.js
-│   ├── Site-*.js
-│   ├── worlds-*.js
-│   ├── fx-*.js
-│   └── *.css
+├── index.html                   # HTML entry point
+├── package.json                 # Scripts and dependencies
+├── vite.config.js               # Vite bundler configuration
+├── serve.py                     # Zero-dependency Python HTTP server
+├── src/
+│   ├── main.jsx                 # React root mount
+│   ├── App.jsx                  # Main application orchestrator
+│   ├── index.css                # Base styles, typography, and theme vars
+│   ├── audio/
+│   │   └── soundEngine.js       # Real-time Web Audio API synthesizer
+│   ├── store/
+│   │   └── useStore.js          # Reactive store for 3D modes & alien selection
+│   ├── data/
+│   │   ├── aliens.js            # 10 aliens + Ben specs, stats, and lore
+│   │   └── timeline.js          # Series chronology, eras, and lab features
+│   ├── components/
+│   │   ├── Navigation.jsx       # Header, navigation, and mobile drawer
+│   │   ├── Hero.jsx             # Mouse-parallax hero section
+│   │   ├── HeroesSection.jsx    # Alien roster, details, and transform button
+│   │   ├── OmnitrixSection.jsx  # Omnitrix showcase and activation trigger
+│   │   ├── SeriesTimeline.jsx   # Franchise timeline & era cards
+│   │   ├── FeaturesGrid.jsx     # Lab and interactive feature cards
+│   │   ├── Footer.jsx           # Credits & copyright disclaimer
+│   │   ├── ModeUI.jsx           # 3D HUD controls, alien dial, & transform flash
+│   │   └── Canvas3D/
+│   │       ├── OmnitrixStage.jsx # Three.js 3D Omnitrix interactive canvas
+│   │       ├── AlienViewer.jsx   # Three.js 3D Alien inspection viewer
+│   │       └── StageManager.jsx  # Mode switcher for 3D scenes
+│   └── styles/
+│       ├── site.css             # Section, layout, and hero styling
+│       └── modeUI.css           # 3D overlay, HUD, and alien strip styling
 ├── models/                      # 3D GLTF / GLB models
-│   ├── omnitrix.glb
-│   ├── crystals.glb
-│   ├── title.glb
-│   └── aliens/
-│       ├── ben.glb
-│       ├── heatblast.glb
-│       ├── four-arms.glb
-│       ├── xlr8.glb
-│       ├── diamondhead.glb
-│       ├── wildmutt.glb
-│       ├── upgrade.glb
-│       ├── grey-matter.glb
-│       ├── stinkfly.glb
-│       ├── ripjaws.glb
-│       └── cannonbolt.glb
-├── fonts/                       # Custom typography (WOFF2)
-│   ├── big-shoulders-display-*.woff2
-│   ├── ibm-plex-mono-*.woff2
-│   └── lexend-exa-*.woff2
-└── images/                      # Renders, silhouettes, and banners
-    ├── logo.svg
-    ├── silhouettes.png
-    ├── omnitrix-poster.webp
-    ├── cast/                    # High-res alien & Ben portraits
-    └── site/                    # Timeline and series banner art
+│   ├── omnitrix.glb             # 3D Omnitrix model
+│   ├── crystals.glb             # Omnitrix crystal core
+│   └── aliens/                  # All 11 character models
+├── fonts/                       # Custom typography (.woff2)
+└── images/                      # Renders, cast portraits, and era banners
 ```
+
+## Disclaimer
+
+This is an unofficial, non-commercial fan tribute. Ben 10 and all related characters and elements are trademarks of and © Cartoon Network / Warner Bros. Discovery.
