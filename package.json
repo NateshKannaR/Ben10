@@ -1,0 +1,9 @@
+{
+  "name": "ben10-omnitrix-experience",
+  "version": "1.0.0",
+  "description": "Ben 10: Omnitrix Experience - 3D Interactive Fan Tribute",
+  "scripts": {
+    "start": "npx serve . -p 3000",
+    "serve": "python3 serve.py 3000"
+  }
+}

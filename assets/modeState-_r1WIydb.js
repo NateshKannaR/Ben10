@@ -1,0 +1,1 @@
+import{t as e}from"./react-Coptc9AT.js";var t=e(e=>({pick:0,left:1,right:2,sample:0,planet:0,scanned:[],setPick:t=>e({pick:t}),setLeft:t=>e({left:t}),setRight:t=>e({right:t}),setSample:t=>e({sample:t}),setPlanet:t=>e({planet:t}),markScanned:t=>e(e=>e.scanned.includes(t)?e:{scanned:[...e.scanned,t]})})),n={progress:0};export{t as n,n as t};
