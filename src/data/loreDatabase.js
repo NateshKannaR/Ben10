@@ -120,7 +120,7 @@ export const cosmicThreats = [
     weakness: "Overconfidence, vulnerability to extreme cold and magnetic disruption",
     bio: "The most persistent and feared warlord in the galaxy. Vilgax spent decades tracking the Omnitrix across star systems to arm an unstoppable army of biomechanical warriors.",
     archEnemy: "Ben Tennyson / Diamondhead",
-    avatar: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=300&auto=format&fit=crop&q=80"
+    avatar: "/images/site/series-classic.webp"
   },
   {
     id: "kevin11",
@@ -140,7 +140,7 @@ export const cosmicThreats = [
     weakness: "Absorbing energy causes severe neuro-chemical imbalance and insanity",
     bio: "Originally an troubled runaway on the streets of New York, Kevin's Osmosian genetics absorbed the energy of the Omnitrix, mutating him into an amalgamated beast with the powers of all original 10 aliens.",
     archEnemy: "Four Arms / Cannonbolt",
-    avatar: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300&auto=format&fit=crop&q=80"
+    avatar: "/images/site/series-force.webp"
   },
   {
     id: "malware",
@@ -160,7 +160,7 @@ export const cosmicThreats = [
     weakness: "Helix stabilization codes and energy absorption overload (Feedback)",
     bio: "Born with an incomplete life code when Azmuth created Galvan B, Malware became bitter and insane, obsessing over stealing the Omnitrix to cure his broken code and destroying Galvan Prime.",
     archEnemy: "Feedback / Upgrade",
-    avatar: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=300&auto=format&fit=crop&q=80"
+    avatar: "/images/site/series-omniverse.webp"
   },
   {
     id: "highbreed",
@@ -180,7 +180,7 @@ export const cosmicThreats = [
     weakness: "Extreme sterile genetic inbreeding causing cellular degradation",
     bio: "Believing themselves to be the pure first race of the universe, the Highbreed waged a war of total extinction across the galaxy until Ben Tennyson used the Omnitrix to restore their genetic diversity.",
     archEnemy: "Swampfire / Humungousaur",
-    avatar: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=300&auto=format&fit=crop&q=80"
+    avatar: "/images/site/era-force.webp"
   },
   {
     id: "aggregor",
@@ -200,7 +200,7 @@ export const cosmicThreats = [
     weakness: "Over-reliance on absorbed biological matrix; vulnerable to Ultimate Kevin",
     bio: "A ruthless Osmosian warlord who kidnapped five distinct aliens from the Andromeda galaxy, constructing an energy siphon machine to absorb them 100% and break into the Forge of Creation.",
     archEnemy: "Ultimate Echo Echo / Alien X",
-    avatar: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=300&auto=format&fit=crop&q=80"
+    avatar: "/images/site/series-ultimate.webp"
   },
   {
     id: "albedo",
@@ -220,7 +220,7 @@ export const cosmicThreats = [
     weakness: "Chili fry addiction caused by human DNA sync; arrogance",
     bio: "Azmuth's former brilliant apprentice who built his own copy of the Omnitrix. Because the original Omnitrix had Ben Tennyson's DNA as the default human template, Albedo's body was permanently rewritten into a clone of Ben.",
     archEnemy: "Ben Tennyson / Humungousaur",
-    avatar: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=300&auto=format&fit=crop&q=80"
+    avatar: "/images/site/era-ultimate.webp"
   }
 ];
 

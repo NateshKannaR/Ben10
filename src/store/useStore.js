@@ -3,11 +3,11 @@
  */
 import { useState, useEffect } from "react";
 import sound from "../audio/soundEngine";
-import { aliens } from "../data/aliens";
+import { aliens, allAliens } from "../data/aliens";
 
 // Lightweight reactive store without external dependencies
 let state = {
-  mode: null, // null (Site) | 'omnitrix' | 'viewer' | 'archive' | 'scanner' | 'compare' | 'planets' | 'moments' | 'lab'
+  mode: null, // null (Site) | 'omnitrix' | 'viewer'
   selectedAlienIndex: 0,
   soundEnabled: true,
   isTransforming: false,
@@ -27,27 +27,33 @@ export const actions = {
     if (mode === "omnitrix") {
       sound.rise();
       state.coreRaised = true;
+    } else if (mode === "viewer") {
+      state.coreRaised = true;
     } else if (mode === null) {
       state.coreRaised = false;
+      state.isTransforming = false;
     }
     notify();
   },
 
   selectAlien(index) {
-    if (index < 0) index = aliens.length - 1;
-    if (index >= aliens.length) index = 0;
+    if (typeof index !== "number" || isNaN(index)) index = 0;
+    if (index < 0) index = allAliens.length - 1;
+    if (index >= allAliens.length) index = 0;
     state.selectedAlienIndex = index;
-    state.bezelAngle = (index / aliens.length) * (Math.PI * 2);
+    state.bezelAngle = (index / 10) * (Math.PI * 2);
     sound.click();
     notify();
   },
 
   nextAlien() {
-    actions.selectAlien(state.selectedAlienIndex + 1);
+    const max = state.selectedAlienIndex < 10 ? 10 : allAliens.length;
+    actions.selectAlien((state.selectedAlienIndex + 1) % max);
   },
 
   prevAlien() {
-    actions.selectAlien(state.selectedAlienIndex - 1);
+    const max = state.selectedAlienIndex < 10 ? 10 : allAliens.length;
+    actions.selectAlien((state.selectedAlienIndex - 1 + max) % max);
   },
 
   toggleSound() {
@@ -57,20 +63,29 @@ export const actions = {
   },
 
   transform(alienIndex = state.selectedAlienIndex) {
+    if (typeof alienIndex === "string") {
+      const foundIdx = allAliens.findIndex((a) => a.id === alienIndex);
+      alienIndex = foundIdx !== -1 ? foundIdx : 0;
+    }
+    if (typeof alienIndex !== "number" || isNaN(alienIndex)) {
+      alienIndex = 0;
+    }
     state.selectedAlienIndex = alienIndex;
     state.isTransforming = true;
+    state.mode = "viewer";
+    state.coreRaised = true;
     sound.transform();
     notify();
 
     setTimeout(() => {
       state.isTransforming = false;
-      state.mode = "viewer";
       notify();
-    }, 2100);
+    }, 1400);
   },
 
   close3D() {
     state.mode = null;
+    state.isTransforming = false;
     state.coreRaised = false;
     sound.timeout();
     notify();
@@ -85,9 +100,14 @@ export function useStore() {
     return () => listeners.delete(setCurrentState);
   }, []);
 
+  const currentAlien =
+    allAliens[currentState.selectedAlienIndex] ||
+    aliens[currentState.selectedAlienIndex % 10] ||
+    allAliens[0];
+
   return {
     ...currentState,
-    currentAlien: aliens[currentState.selectedAlienIndex],
+    currentAlien,
     ...actions
   };
 }

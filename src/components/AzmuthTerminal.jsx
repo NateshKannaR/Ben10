@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { azmuthKnowledgeBase } from "../data/loreDatabase";
 import { allAliens } from "../data/alienDatabase";
 import sound from "../audio/soundEngine";
@@ -133,11 +133,9 @@ export default function AzmuthTerminal({ isOpen, onClose }) {
     grid.position.y = -0.55;
     scene.add(grid);
 
-    // Load Azmuth model
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.5/");
+    // Load Azmuth model with local MeshoptDecoder (100% offline)
     const gltfLoader = new GLTFLoader();
-    gltfLoader.setDRACOLoader(dracoLoader);
+    gltfLoader.setMeshoptDecoder(MeshoptDecoder);
 
     let azmuthModel = null;
     gltfLoader.load(
@@ -208,7 +206,6 @@ export default function AzmuthTerminal({ isOpen, onClose }) {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
       renderer.dispose();
-      dracoLoader.dispose();
       gridGeo.dispose();
       gridMat.dispose();
       if (container && renderer.domElement) {

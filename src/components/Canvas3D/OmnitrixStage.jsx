@@ -1,16 +1,23 @@
 import React, { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { useStore } from "../../store/useStore";
 import { aliens } from "../../data/aliens";
 
 export default function OmnitrixStage() {
   const containerRef = useRef(null);
   const { selectedAlienIndex, isTransforming } = useStore();
-  const sceneRef = useRef(null);
-  const bezelRef = useRef(null);
-  const coreRef = useRef(null);
+  const selectedIndexRef = useRef(selectedAlienIndex);
+  const isTransformingRef = useRef(isTransforming);
+
+  useEffect(() => {
+    selectedIndexRef.current = selectedAlienIndex;
+  }, [selectedAlienIndex]);
+
+  useEffect(() => {
+    isTransformingRef.current = isTransforming;
+  }, [isTransforming]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -18,7 +25,6 @@ export default function OmnitrixStage() {
 
     // Setup Scene, Camera, Renderer
     const scene = new THREE.Scene();
-    sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(
       45,
@@ -108,12 +114,9 @@ export default function OmnitrixStage() {
     const particles = new THREE.Points(particleGeo, particleMat);
     scene.add(particles);
 
-    // GLTF / Draco Loader setup
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.5/");
-
+    // GLTF / Meshopt Loader setup (100% offline)
     const gltfLoader = new GLTFLoader();
-    gltfLoader.setDRACOLoader(dracoLoader);
+    gltfLoader.setMeshoptDecoder(MeshoptDecoder);
 
     // Load Omnitrix Model
     let omnitrixModel = null;
@@ -128,12 +131,6 @@ export default function OmnitrixStage() {
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
-            if (child.name.toLowerCase().includes("dial") || child.name.toLowerCase().includes("ring")) {
-              bezelRef.current = child;
-            }
-            if (child.name.toLowerCase().includes("core") || child.name.toLowerCase().includes("glass")) {
-              coreRef.current = child;
-            }
           }
         });
 
@@ -161,8 +158,9 @@ export default function OmnitrixStage() {
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
-      const delta = clock.getDelta();
       const time = clock.getElapsedTime();
+      const transforming = isTransformingRef.current;
+      const curIndex = selectedIndexRef.current;
 
       // Camera position with smooth mouse parallax
       targetRotY = mouseX * 0.45;
@@ -171,7 +169,7 @@ export default function OmnitrixStage() {
       camera.position.y += (targetRotX - camera.position.y) * 0.05;
 
       // Shake camera if currently transforming
-      if (isTransforming) {
+      if (transforming) {
         camera.position.x += (Math.random() - 0.5) * 0.08;
         camera.position.y += (Math.random() - 0.5) * 0.08;
         camera.position.z = 2.6 + Math.sin(time * 30) * 0.05;
@@ -182,8 +180,8 @@ export default function OmnitrixStage() {
 
       // Pulse core light & hologram beam
       const pulse = Math.sin(time * 5);
-      coreLight.intensity = isTransforming ? 12 : 3.2 + pulse * 1.2;
-      beamMat.opacity = isTransforming ? 0.8 : 0.25 + (pulse + 1) * 0.08;
+      coreLight.intensity = transforming ? 12 : 3.2 + pulse * 1.2;
+      beamMat.opacity = transforming ? 0.8 : 0.25 + (pulse + 1) * 0.08;
       holoBeam.rotation.y += 0.015;
 
       // Rotate hologram rings in opposing directions
@@ -204,7 +202,7 @@ export default function OmnitrixStage() {
 
       // Rotate Omnitrix dial towards target angle smoothly
       if (omnitrixModel) {
-        const targetAngle = (selectedAlienIndex / aliens.length) * (Math.PI * 2);
+        const targetAngle = ((curIndex % aliens.length) / aliens.length) * (Math.PI * 2);
         omnitrixModel.rotation.y += (targetAngle - omnitrixModel.rotation.y) * 0.12;
       }
 
@@ -226,7 +224,6 @@ export default function OmnitrixStage() {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("resize", handleResize);
       renderer.dispose();
-      dracoLoader.dispose();
       beamGeo.dispose();
       beamMat.dispose();
       ringGeo1.dispose();
@@ -238,7 +235,7 @@ export default function OmnitrixStage() {
         container.removeChild(renderer.domElement);
       }
     };
-  }, [selectedAlienIndex, isTransforming]);
+  }, []);
 
   return (
     <div

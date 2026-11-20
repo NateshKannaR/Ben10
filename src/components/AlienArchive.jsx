@@ -57,13 +57,9 @@ export default function AlienArchive() {
 
   const handleLaunch3D = (alien) => {
     sound.transform();
-    // Find index in main aliens array or set to current
     const idx = allAliens.findIndex((a) => a.id === alien.id);
-    if (idx !== -1) {
-      selectAlien(idx % 10); // Sync dial slot
-    }
     setActiveModalAlien(null);
-    transform(idx % 10);
+    transform(idx !== -1 ? idx : alien.id);
   };
 
   return (

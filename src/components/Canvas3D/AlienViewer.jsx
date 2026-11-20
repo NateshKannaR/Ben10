@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { useStore } from "../../store/useStore";
 import { ALIEN_SCALE_FACTORS } from "../../data/aliens";
 
@@ -32,7 +32,8 @@ export default function AlienViewer() {
     container.appendChild(renderer.domElement);
 
     // Accent Light matching the current Alien
-    const accentColor = new THREE.Color(currentAlien.accent || "#00ff88");
+    const accentHex = currentAlien?.accent || "#00ff88";
+    const accentColor = new THREE.Color(accentHex);
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
     scene.add(ambientLight);
@@ -100,19 +101,17 @@ export default function AlienViewer() {
     const dnaPoints = new THREE.Points(dnaGeo, dnaMat);
     scene.add(dnaPoints);
 
-    // Load Alien GLB
-    const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.5/");
-
+    // Load Alien GLB with local MeshoptDecoder (100% offline, zero network)
     const gltfLoader = new GLTFLoader();
-    gltfLoader.setDRACOLoader(dracoLoader);
+    gltfLoader.setMeshoptDecoder(MeshoptDecoder);
 
     let alienGroup = new THREE.Group();
     scene.add(alienGroup);
 
     // Determine model path
-    let modelUrl = `/models/aliens/${currentAlien.id}.glb`;
-    if (currentAlien.id === "azmuth") {
+    const alienId = currentAlien?.id || "heatblast";
+    let modelUrl = `/models/aliens/${alienId}.glb`;
+    if (alienId === "azmuth") {
       modelUrl = "/models/azmuth.glb";
     }
 
@@ -132,7 +131,7 @@ export default function AlienViewer() {
         const size = box.getSize(new THREE.Vector3());
         const center = box.getCenter(new THREE.Vector3());
 
-        const targetHeight = ALIEN_SCALE_FACTORS[currentAlien.id] || 2.0;
+        const targetHeight = ALIEN_SCALE_FACTORS[alienId] || 2.0;
         const scale = targetHeight / (size.y || 1);
 
         root.position.x = -center.x * scale;
@@ -144,14 +143,31 @@ export default function AlienViewer() {
       },
       undefined,
       (err) => {
-        // Fallback: If alien GLB not found, load 3D crystals with hologram beam
-        console.warn(`Alien model not found for ${currentAlien.id}, loading holographic crystal matrix...`);
-        gltfLoader.load("/models/crystals.glb", (gltf) => {
-          const crystalScene = gltf.scene;
-          crystalScene.position.set(0, -0.4, 0);
-          crystalScene.scale.setScalar(1.5);
-          alienGroup.add(crystalScene);
-        });
+        // Fallback: If specific alien GLB not on disk, load 3D crystals with hologram beam
+        console.warn(`Alien model not found for ${alienId}, loading holographic crystal matrix...`);
+        gltfLoader.load(
+          "/models/crystals.glb",
+          (gltf) => {
+            const crystalScene = gltf.scene;
+            crystalScene.position.set(0, -0.4, 0);
+            crystalScene.scale.setScalar(1.5);
+            alienGroup.add(crystalScene);
+          },
+          undefined,
+          (err2) => {
+            // Procedural geometric hologram if crystals.glb also fails
+            const geom = new THREE.OctahedronGeometry(0.8, 0);
+            const mat = new THREE.MeshStandardMaterial({
+              color: accentColor,
+              wireframe: true,
+              emissive: accentColor,
+              emissiveIntensity: 0.6
+            });
+            const mesh = new THREE.Mesh(geom, mat);
+            mesh.position.set(0, 0.4, 0);
+            alienGroup.add(mesh);
+          }
+        );
       }
     );
 
@@ -221,7 +237,6 @@ export default function AlienViewer() {
       window.removeEventListener("pointerup", onPointerUp);
       window.removeEventListener("resize", handleResize);
       renderer.dispose();
-      dracoLoader.dispose();
       ringGeo1.dispose();
       ringGeo2.dispose();
       ringMat1.dispose();
@@ -232,7 +247,7 @@ export default function AlienViewer() {
         container.removeChild(renderer.domElement);
       }
     };
-  }, [currentAlien.id]);
+  }, [currentAlien?.id]);
 
   return <div ref={containerRef} className="stage-canvas" />;
 }
