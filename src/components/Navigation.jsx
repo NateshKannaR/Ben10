@@ -5,12 +5,11 @@ import sound from "../audio/soundEngine";
 const NAV_LINKS = [
   { id: "home", label: "Home" },
   { id: "heroes", label: "Heroes" },
-  { id: "archive", label: "Archive (63)" },
-  { id: "arena", label: "Battle Arena" },
+  { id: "archive", label: "Archive" },
+  { id: "arena", label: "Arena" },
   { id: "omnitrix", label: "Omnitrix" },
-  { id: "evolution", label: "Matrix Evolution" },
+  { id: "evolution", label: "Evolution" },
   { id: "threats", label: "Villains" },
-  { id: "series", label: "Series" },
   { id: "chronology", label: "Timeline" }
 ];
 
@@ -51,6 +50,7 @@ export default function Navigation({ onOpenAzmuth }) {
           <button
             key={link.id}
             type="button"
+            className="nav__link-btn"
             onClick={() => scrollTo(link.id)}
           >
             {link.label}
@@ -61,22 +61,24 @@ export default function Navigation({ onOpenAzmuth }) {
       <div className="nav__actions">
         <button
           type="button"
-          className="wire-button azmuth-nav-btn"
+          className="nav-azmuth-pill"
           onClick={() => {
             sound.click();
             if (onOpenAzmuth) onOpenAzmuth();
           }}
           title="Open Galvan AI 3D Hologram Terminal"
         >
-          ✦ Azmuth AI (3D)
+          <span className="nav-azmuth-dot" />
+          <span className="nav-azmuth-icon">🧠</span>
+          <span className="nav-azmuth-text">Azmuth AI</span>
         </button>
 
         <button
           type="button"
-          className="wire-button nav__cta needs3d"
+          className="nav-omnitrix-cta"
           onClick={openOmnitrix}
         >
-          Omnitrix 3D
+          <span>⚡ Omnitrix 3D</span>
         </button>
       </div>
 
@@ -97,32 +99,41 @@ export default function Navigation({ onOpenAzmuth }) {
 
       {menuOpen && (
         <div className="nav__mobile-menu">
-          {NAV_LINKS.map((link) => (
+          <div className="nav__mobile-brand">
+            <img src="/images/logo.svg" alt="Ben 10 Logo" width="40" height="40" />
+            <span>OMNITRIX CODESPREAD</span>
+          </div>
+          <div className="nav__mobile-links">
+            {NAV_LINKS.map((link) => (
+              <button
+                key={link.id}
+                type="button"
+                className="nav__mobile-item"
+                onClick={() => scrollTo(link.id)}
+              >
+                {link.label}
+              </button>
+            ))}
+          </div>
+          <div className="nav__mobile-actions">
             <button
-              key={link.id}
               type="button"
-              onClick={() => scrollTo(link.id)}
+              className="nav__mobile-btn nav__mobile-btn--azmuth"
+              onClick={() => {
+                setMenuOpen(false);
+                if (onOpenAzmuth) onOpenAzmuth();
+              }}
             >
-              {link.label}
+              🧠 Launch Azmuth AI (3D)
             </button>
-          ))}
-          <button
-            type="button"
-            className="wire-button"
-            onClick={() => {
-              setMenuOpen(false);
-              if (onOpenAzmuth) onOpenAzmuth();
-            }}
-          >
-            ✦ Azmuth AI (3D)
-          </button>
-          <button
-            type="button"
-            className="wire-button wire-button--accent"
-            onClick={openOmnitrix}
-          >
-            Omnitrix 3D
-          </button>
+            <button
+              type="button"
+              className="nav__mobile-btn nav__mobile-btn--omnitrix"
+              onClick={openOmnitrix}
+            >
+              ⚡ Activate Omnitrix 3D
+            </button>
+          </div>
         </div>
       )}
     </header>

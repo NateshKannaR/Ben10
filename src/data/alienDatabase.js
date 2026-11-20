@@ -546,8 +546,68 @@ export const allAliens = [
     "image": "/images/cast/upgrade.webp"
   },
   {
-    "id": "ghostfreak",
+    "id": "cannonbolt",
     "slot": 10,
+    "name": "Cannonbolt",
+    "series": "OS",
+    "seriesName": "Original Series",
+    "species": "Arburian Pelarota",
+    "homeworld": "Arburia",
+    "bodyType": "Armadillo-like humanoid",
+    "height": "5 feet",
+    "accent": "#F39C12",
+    "colorScheme": [
+      "white",
+      "yellow",
+      "black"
+    ],
+    "about": "A tough Arburian Pelarota from Arburia, Cannonbolt rolls into an indestructible sphere to smash through obstacles and ricochet off surfaces.",
+    "bio": "A tough Arburian Pelarota from Arburia, Cannonbolt rolls into an indestructible sphere to smash through obstacles and ricochet off surfaces.",
+    "powers": [
+      {
+        "name": "Spherical Armor Roll",
+        "detail": "Rolls into a virtually indestructible armored ball"
+      },
+      {
+        "name": "Kinetic Ricochet",
+        "detail": "Bounces at extreme momentum to obliterate alien armor"
+      },
+      {
+        "name": "Super Durability",
+        "detail": "Withstands atmospheric re-entry and laser blasts"
+      },
+      {
+        "name": "Enhanced Strength",
+        "detail": "Overpowers heavy alien combatants"
+      }
+    ],
+    "weakness": "Top-heavy when upright, vulnerable to loss of balance on slippery terrain",
+    "stats": {
+      "strength": 82,
+      "speed": 75,
+      "intelligence": 45,
+      "control": 80,
+      "durability": 95,
+      "agility": 66
+    },
+    "world": {
+      "name": "Arburia",
+      "blurb": "Home planet of the Arburian Pelarota"
+    },
+    "debut": {
+      "series": "OS",
+      "episode_number": "8",
+      "episode_name": "The Big Tick"
+    },
+    "dna": "CAN-1772",
+    "has3DModel": true,
+    "modelPath": "/models/aliens/cannonbolt.glb",
+    "modelScale": 2.05,
+    "image": "/images/cast/cannonbolt.webp"
+  },
+  {
+    "id": "ghostfreak",
+    "slot": 11,
     "name": "Ghostfreak",
     "series": "OS",
     "seriesName": "Original Series",
@@ -555,7 +615,7 @@ export const allAliens = [
     "homeworld": "Anur Phaetos",
     "bodyType": "Ghost-like humanoid with one eye",
     "height": "6 feet",
-    "accent": "#BDC3C7",
+    "accent": "#9C27B0",
     "colorScheme": [
       "grey",
       "white",
@@ -581,7 +641,7 @@ export const allAliens = [
         "detail": "Species innate tentacle attacks capability"
       }
     ],
-    "weakness": "Energy drains, sonic frequencies, or extreme elemental opposites",
+    "weakness": "Extreme sunlight burns outer skin; genetic persona Zs'Skayr retains conscious will",
     "stats": {
       "strength": 50,
       "speed": 60,
@@ -603,67 +663,7 @@ export const allAliens = [
     "has3DModel": false,
     "modelPath": null,
     "modelScale": 2.05,
-    "image": "/images/aliens/ghostfreak.png"
-  },
-  {
-    "id": "cannonbolt",
-    "slot": 11,
-    "name": "Cannonbolt",
-    "series": "OS",
-    "seriesName": "Original Series",
-    "species": "Arburian Pelarota",
-    "homeworld": "Arburia",
-    "bodyType": "Armadillo-like humanoid",
-    "height": "5 feet",
-    "accent": "#F39C12",
-    "colorScheme": [
-      "white",
-      "yellow",
-      "black"
-    ],
-    "about": "A tough Arburian Pelarota from Arburia, Cannonbolt rolls into a ball to smash through obstacles.",
-    "bio": "A tough Arburian Pelarota from Arburia, Cannonbolt rolls into a ball to smash through obstacles.",
-    "powers": [
-      {
-        "name": "Rolling into a ball",
-        "detail": "Species innate rolling into a ball capability"
-      },
-      {
-        "name": "Super durability",
-        "detail": "Species innate super durability capability"
-      },
-      {
-        "name": "Enhanced strength",
-        "detail": "Species innate enhanced strength capability"
-      },
-      {
-        "name": "Ricochet attacks",
-        "detail": "Species innate ricochet attacks capability"
-      }
-    ],
-    "weakness": "Energy drains, sonic frequencies, or extreme elemental opposites",
-    "stats": {
-      "strength": 70,
-      "speed": 60,
-      "intelligence": 30,
-      "control": 80,
-      "durability": 58,
-      "agility": 66
-    },
-    "world": {
-      "name": "Arburia",
-      "blurb": "Home planet of the Arburian Pelarota"
-    },
-    "debut": {
-      "series": "OS",
-      "episode_number": "8",
-      "episode_name": "The Big Tick"
-    },
-    "dna": "CAN-1772",
-    "has3DModel": true,
-    "modelPath": "/models/aliens/cannonbolt.glb",
-    "modelScale": 2.05,
-    "image": "/images/cast/cannonbolt.webp"
+    "image": "/images/site/series-classic.webp"
   },
   {
     "id": "wildvine",
@@ -3753,17 +3753,17 @@ export const allAliens = [
 export const aliens = allAliens.slice(0, 10); // First 10 active in Omnitrix Dial by default
 
 export const ALIEN_SCALE_FACTORS = {
-  heatblast: 2.05,
-  'four-arms': 2.55,
-  xlr8: 2.05,
-  diamondhead: 2.15,
+  heatblast: 2.15,
+  'four-arms': 2.50,
+  xlr8: 2.10,
+  diamondhead: 2.20,
   wildmutt: 1.85,
   upgrade: 2.10,
-  'grey-matter': 0.95,
+  'grey-matter': 1.45,
   stinkfly: 2.20,
-  ripjaws: 2.10,
-  cannonbolt: 1.95,
-  azmuth: 0.85
+  ripjaws: 2.15,
+  cannonbolt: 2.10,
+  azmuth: 1.10
 };
 
 export const SERIES_METADATA = {

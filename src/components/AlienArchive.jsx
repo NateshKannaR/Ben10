@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import { allAliens, SERIES_METADATA } from "../data/alienDatabase";
 import { useStore } from "../store/useStore";
 import sound from "../audio/soundEngine";
+import AlienVisual from "./AlienVisual";
 
 const POWER_FILTERS = [
   "All",
@@ -180,18 +181,13 @@ export default function AlienArchive() {
               </span>
             </div>
 
-            {/* Alien Image / Silhouette preview */}
+            {/* Alien Image / Hologram preview */}
             <div className="archive-card__visual">
-              <img
-                src={alien.image}
-                alt={alien.name}
-                loading="lazy"
-                onError={(e) => {
-                  e.target.src = "/images/cast/heatblast.webp";
-                }}
-              />
-              {alien.has3DModel && (
-                <span className="archive-card__3d-badge">3D GLB</span>
+              <AlienVisual alien={alien} />
+              {alien.has3DModel ? (
+                <span className="archive-card__3d-badge archive-card__3d-badge--glb">★ 3D GLB</span>
+              ) : (
+                <span className="archive-card__3d-badge archive-card__3d-badge--holo">✦ 3D HOLO</span>
               )}
             </div>
 
@@ -246,13 +242,7 @@ export default function AlienArchive() {
               {/* Left Column: Image & Debut info */}
               <div className="alien-modal__portrait">
                 <div className="alien-modal__img-box">
-                  <img
-                    src={activeModalAlien.image}
-                    alt={activeModalAlien.name}
-                    onError={(e) => {
-                      e.target.src = "/images/cast/heatblast.webp";
-                    }}
-                  />
+                  <AlienVisual alien={activeModalAlien} />
                   <div className="alien-modal__dna-tag">{activeModalAlien.dna}</div>
                 </div>
 

@@ -54,20 +54,6 @@ export default function App() {
         </main>
         <Footer />
       </div>
-
-      {/* Floating Azmuth Summon Pill in bottom-right corner */}
-      {!mode && (
-        <button
-          type="button"
-          className="floating-azmuth-pill"
-          onClick={() => setIsAzmuthOpen(true)}
-          title="Open Galvan AI 3D Terminal"
-        >
-          <span className="pill-dot" />
-          <span className="pill-avatar">🧠</span>
-          <span className="pill-text">Azmuth AI (3D)</span>
-        </button>
-      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { allAliens } from "../data/alienDatabase";
 import sound from "../audio/soundEngine";
+import AlienVisual from "./AlienVisual";
 
 export default function AlienArena() {
   const [fighter1Id, setFighter1Id] = useState("heatblast");
@@ -111,13 +112,7 @@ export default function AlienArena() {
             </div>
 
             <div className="fighter-visual">
-              <img
-                src={fighter1.image}
-                alt={fighter1.name}
-                onError={(e) => {
-                  e.target.src = "/images/cast/heatblast.webp";
-                }}
-              />
+              <AlienVisual alien={fighter1} />
               <div className="fighter-badge">{fighter1.series} ERA</div>
             </div>
 
@@ -185,13 +180,7 @@ export default function AlienArena() {
             </div>
 
             <div className="fighter-visual">
-              <img
-                src={fighter2.image}
-                alt={fighter2.name}
-                onError={(e) => {
-                  e.target.src = "/images/cast/heatblast.webp";
-                }}
-              />
+              <AlienVisual alien={fighter2} />
               <div className="fighter-badge">{fighter2.series} ERA</div>
             </div>
 
