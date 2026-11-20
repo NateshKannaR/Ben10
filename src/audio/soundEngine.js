@@ -16,7 +16,7 @@ class SoundEngine {
     this.holdGain = null;
     this.noise = null;
     this.lastTime = 0;
-    this.muted = false;
+    this.muted = true;
   }
 
   start() {

@@ -42,7 +42,7 @@ export default function App() {
       <div className="site-layout">
         <Navigation onOpenAzmuth={() => setIsAzmuthOpen(true)} />
         <main>
-          <Hero onOpenAzmuth={() => setIsAzmuthOpen(true)} />
+          <Hero />
           <HeroesSection />
           <AlienArchive />
           <AlienArena />

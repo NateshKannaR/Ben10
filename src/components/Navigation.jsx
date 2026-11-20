@@ -63,13 +63,11 @@ export default function Navigation({ onOpenAzmuth }) {
           type="button"
           className="nav-azmuth-pill"
           onClick={() => {
-            sound.click();
             if (onOpenAzmuth) onOpenAzmuth();
           }}
           title="Open Galvan AI 3D Hologram Terminal"
         >
           <span className="nav-azmuth-dot" />
-          <span className="nav-azmuth-icon">🧠</span>
           <span className="nav-azmuth-text">Azmuth AI</span>
         </button>
 
@@ -78,7 +76,7 @@ export default function Navigation({ onOpenAzmuth }) {
           className="nav-omnitrix-cta"
           onClick={openOmnitrix}
         >
-          <span>⚡ Omnitrix 3D</span>
+          <span>Omnitrix 3D</span>
         </button>
       </div>
 
@@ -124,14 +122,14 @@ export default function Navigation({ onOpenAzmuth }) {
                 if (onOpenAzmuth) onOpenAzmuth();
               }}
             >
-              🧠 Launch Azmuth AI (3D)
+              Azmuth AI
             </button>
             <button
               type="button"
               className="nav__mobile-btn nav__mobile-btn--omnitrix"
               onClick={openOmnitrix}
             >
-              ⚡ Activate Omnitrix 3D
+              Omnitrix 3D
             </button>
           </div>
         </div>
