@@ -27,7 +27,7 @@ export default function AlienViewer() {
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.3;
+    renderer.toneMappingExposure = 1.35;
     renderer.shadowMap.enabled = true;
     container.appendChild(renderer.domElement);
 
@@ -37,31 +37,68 @@ export default function AlienViewer() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
     keyLight.position.set(2, 4, 3);
     keyLight.castShadow = true;
     scene.add(keyLight);
 
-    const accentRim = new THREE.SpotLight(accentColor, 4);
+    const accentRim = new THREE.SpotLight(accentColor, 4.5);
     accentRim.position.set(-3, 3, -2);
     scene.add(accentRim);
 
-    const groundGlow = new THREE.PointLight(accentColor, 2, 4);
+    const groundGlow = new THREE.PointLight(accentColor, 3, 5);
     groundGlow.position.set(0, -0.2, 0);
     scene.add(groundGlow);
 
-    // Platform ring
-    const ringGeo = new THREE.RingGeometry(0.8, 1.2, 64);
-    const ringMat = new THREE.MeshBasicMaterial({
+    // Platform ring 1 (outer)
+    const ringGeo1 = new THREE.RingGeometry(0.85, 1.25, 64);
+    const ringMat1 = new THREE.MeshBasicMaterial({
       color: accentColor,
       side: THREE.DoubleSide,
       transparent: true,
-      opacity: 0.35
+      opacity: 0.35,
+      blending: THREE.AdditiveBlending
     });
-    const ring = new THREE.Mesh(ringGeo, ringMat);
-    ring.rotation.x = -Math.PI / 2;
-    ring.position.y = -1;
-    scene.add(ring);
+    const ring1 = new THREE.Mesh(ringGeo1, ringMat1);
+    ring1.rotation.x = -Math.PI / 2;
+    ring1.position.y = -1;
+    scene.add(ring1);
+
+    // Platform ring 2 (inner glowing circle)
+    const ringGeo2 = new THREE.RingGeometry(0.55, 0.65, 48);
+    const ringMat2 = new THREE.MeshBasicMaterial({
+      color: 0x39ff14,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.5,
+      blending: THREE.AdditiveBlending
+    });
+    const ring2 = new THREE.Mesh(ringGeo2, ringMat2);
+    ring2.rotation.x = -Math.PI / 2;
+    ring2.position.y = -0.98;
+    scene.add(ring2);
+
+    // Orbiting DNA particles
+    const dnaCount = 120;
+    const dnaPositions = new Float32Array(dnaCount * 3);
+    for (let i = 0; i < dnaCount; i++) {
+      const angle = (i / dnaCount) * Math.PI * 4;
+      const radius = 1.35 + Math.sin(i * 0.2) * 0.15;
+      dnaPositions[i * 3] = Math.cos(angle) * radius;
+      dnaPositions[i * 3 + 1] = (i / dnaCount) * 2.8 - 0.9;
+      dnaPositions[i * 3 + 2] = Math.sin(angle) * radius;
+    }
+    const dnaGeo = new THREE.BufferGeometry();
+    dnaGeo.setAttribute("position", new THREE.BufferAttribute(dnaPositions, 3));
+    const dnaMat = new THREE.PointsMaterial({
+      color: accentColor,
+      size: 0.04,
+      transparent: true,
+      opacity: 0.7,
+      blending: THREE.AdditiveBlending
+    });
+    const dnaPoints = new THREE.Points(dnaGeo, dnaMat);
+    scene.add(dnaPoints);
 
     // Load Alien GLB
     const dracoLoader = new DRACOLoader();
@@ -73,7 +110,12 @@ export default function AlienViewer() {
     let alienGroup = new THREE.Group();
     scene.add(alienGroup);
 
-    const modelUrl = `/models/aliens/${currentAlien.id}.glb`;
+    // Determine model path
+    let modelUrl = `/models/aliens/${currentAlien.id}.glb`;
+    if (currentAlien.id === "azmuth") {
+      modelUrl = "/models/azmuth.glb";
+    }
+
     gltfLoader.load(
       modelUrl,
       (gltf) => {
@@ -101,7 +143,16 @@ export default function AlienViewer() {
         alienGroup.add(root);
       },
       undefined,
-      (err) => console.warn(`Could not load ${modelUrl}:`, err)
+      (err) => {
+        // Fallback: If alien GLB not found, load 3D crystals with hologram beam
+        console.warn(`Alien model not found for ${currentAlien.id}, loading holographic crystal matrix...`);
+        gltfLoader.load("/models/crystals.glb", (gltf) => {
+          const crystalScene = gltf.scene;
+          crystalScene.position.set(0, -0.4, 0);
+          crystalScene.scale.setScalar(1.5);
+          alienGroup.add(crystalScene);
+        });
+      }
     );
 
     // Mouse drag rotation
@@ -143,8 +194,12 @@ export default function AlienViewer() {
       }
       alienGroup.rotation.y += (targetRotation - alienGroup.rotation.y) * 0.1;
 
+      // Rotate DNA particles around alien
+      dnaPoints.rotation.y = time * 0.3;
+
       // Platform pulse
-      ring.scale.setScalar(1 + Math.sin(time * 2) * 0.04);
+      ring1.scale.setScalar(1 + Math.sin(time * 2.5) * 0.04);
+      ring2.rotation.z += 0.015;
 
       renderer.render(scene, camera);
     };
@@ -167,6 +222,12 @@ export default function AlienViewer() {
       window.removeEventListener("resize", handleResize);
       renderer.dispose();
       dracoLoader.dispose();
+      ringGeo1.dispose();
+      ringGeo2.dispose();
+      ringMat1.dispose();
+      ringMat2.dispose();
+      dnaGeo.dispose();
+      dnaMat.dispose();
       if (container && renderer.domElement) {
         container.removeChild(renderer.domElement);
       }

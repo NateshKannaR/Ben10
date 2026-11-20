@@ -1,0 +1,1579 @@
+/**
+ * Advanced Ben 10 Stylesheet
+ * Alien Archive (63 aliens), Battle Arena, Omnitrix Evolution, Villains Codex, Azmuth 3D AI Terminal
+ */
+
+:root {
+  --neon-green: #39ff14;
+  --omnitrix-glow: #00ff88;
+  --galvan-cyan: #00e5ff;
+  --threat-red: #ff3344;
+  --cyber-dark: #0a0e0d;
+  --cyber-surface: #121816;
+  --cyber-border: rgba(57, 255, 20, 0.2);
+}
+
+/* ==========================================================================
+   Badge Pills & Global Sci-Fi Accents
+   ========================================================================== */
+
+.badge-pill {
+  display: inline-block;
+  padding: 0.35rem 0.85rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--neon-green);
+  background: rgba(57, 255, 20, 0.08);
+  border: 1px solid rgba(57, 255, 20, 0.3);
+  border-radius: 999px;
+  margin-bottom: 0.8rem;
+  box-shadow: 0 0 12px rgba(57, 255, 20, 0.15);
+}
+
+.badge-pill--red {
+  color: var(--threat-red);
+  background: rgba(255, 51, 68, 0.08);
+  border-color: rgba(255, 51, 68, 0.3);
+  box-shadow: 0 0 12px rgba(255, 51, 68, 0.15);
+}
+
+/* ==========================================================================
+   1. Omnitrix Alien Archive (63 Species)
+   ========================================================================== */
+
+.archive-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.series-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.series-tab {
+  padding: 0.6rem 1.1rem;
+  font-family: var(--font-display, sans-serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #a0aec0;
+  background: #141a18;
+  border: 1px solid #23302a;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.series-tab:hover {
+  color: #fff;
+  border-color: var(--neon-green);
+}
+
+.series-tab--active {
+  color: #000;
+  background: var(--neon-green);
+  border-color: var(--neon-green);
+  box-shadow: 0 0 16px rgba(57, 255, 20, 0.4);
+}
+
+.tab-count {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.25);
+  font-family: monospace;
+}
+
+.archive-search-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.search-box {
+  position: relative;
+  flex: 1;
+  min-width: 280px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: #718096;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 2.4rem 0.75rem 2.6rem;
+  background: #0f1513;
+  border: 1px solid #23302a;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.search-input:focus {
+  border-color: var(--neon-green);
+  box-shadow: 0 0 10px rgba(57, 255, 20, 0.2);
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #718096;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.power-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.power-pill {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  font-family: monospace;
+  background: #141a18;
+  border: 1px solid #23302a;
+  border-radius: 4px;
+  color: #8c9b94;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.power-pill:hover,
+.power-pill--active {
+  color: var(--neon-green);
+  border-color: var(--neon-green);
+  background: rgba(57, 255, 20, 0.1);
+}
+
+.archive-results-info {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #718096;
+  margin-bottom: 1.25rem;
+}
+
+/* Grid of Alien Cards */
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.archive-card {
+  position: relative;
+  background: #0e1412;
+  border: 1px solid #1c2723;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
+}
+
+.archive-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--alien-accent, var(--neon-green));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(57, 255, 20, 0.15);
+}
+
+/* Corner bracket SVG decorators */
+.corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  color: #2b3a34;
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.archive-card:hover .corner {
+  color: var(--alien-accent, var(--neon-green));
+}
+
+.corner--tl { top: 4px; left: 4px; }
+.corner--tr { top: 4px; right: 4px; }
+.corner--bl { bottom: 4px; left: 4px; }
+.corner--br { bottom: 4px; right: 4px; }
+
+.archive-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+}
+
+.archive-card__slot {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+.series-badge {
+  font-family: monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.series-badge--os { background: rgba(57, 255, 20, 0.15); color: #39ff14; }
+.series-badge--af { background: rgba(0, 229, 255, 0.15); color: #00e5ff; }
+.series-badge--ua { background: rgba(255, 61, 0, 0.15); color: #ff3d00; }
+.series-badge--ov { background: rgba(118, 255, 3, 0.15); color: #76ff03; }
+
+.archive-card__visual {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(57, 255, 20, 0.05) 0%, rgba(0, 0, 0, 0.4) 80%);
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+
+.archive-card__visual img {
+  max-width: 85%;
+  max-height: 85%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.6));
+  transition: transform 0.3s ease;
+}
+
+.archive-card:hover .archive-card__visual img {
+  transform: scale(1.08);
+}
+
+.archive-card__3d-badge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  background: #39ff14;
+  color: #000;
+  font-family: monospace;
+  font-weight: 800;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 2px;
+}
+
+.archive-card__meta {
+  margin-bottom: 0.8rem;
+}
+
+.archive-card__name {
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.2rem 0;
+}
+
+.archive-card__species {
+  font-size: 0.85rem;
+  color: #a0aec0;
+  margin: 0;
+}
+
+.archive-card__homeworld {
+  font-size: 0.78rem;
+  color: #718096;
+  margin: 0.15rem 0 0 0;
+}
+
+.archive-card__stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.mini-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: monospace;
+  font-size: 0.72rem;
+  color: #718096;
+}
+
+.mini-stat__lbl { width: 30px; }
+.mini-stat__num { width: 24px; text-align: right; color: #cbd5e0; }
+.mini-stat__bar {
+  flex: 1;
+  height: 4px;
+  background: #1a2420;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.mini-stat__bar div {
+  height: 100%;
+  background: var(--alien-accent, var(--neon-green));
+}
+
+.archive-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: monospace;
+  font-size: 0.72rem;
+  color: #4a5568;
+  border-top: 1px solid #1a2420;
+  padding-top: 0.7rem;
+}
+
+.archive-card__inspect {
+  color: var(--neon-green);
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.archive-card:hover .archive-card__inspect {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Alien DNA Modal View
+   ========================================================================== */
+
+.alien-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.alien-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 8, 6, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.alien-modal__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #0d1311;
+  border: 1px solid var(--modal-accent, var(--neon-green));
+  box-shadow: 0 0 35px rgba(57, 255, 20, 0.25);
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.alien-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  color: #718096;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.alien-modal__close:hover {
+  color: #fff;
+}
+
+.alien-modal__grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .alien-modal__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.alien-modal__portrait {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.alien-modal__img-box {
+  position: relative;
+  background: radial-gradient(circle, rgba(57, 255, 20, 0.1) 0%, rgba(0, 0, 0, 0.6) 80%);
+  border: 1px solid #1c2723;
+  border-radius: 6px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.alien-modal__img-box img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.8));
+}
+
+.alien-modal__dna-tag {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(57, 255, 20, 0.3);
+  padding: 0.2rem 0.5rem;
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--neon-green);
+}
+
+.alien-modal__debut-box {
+  background: #121917;
+  border: 1px solid #202d28;
+  padding: 0.9rem;
+  border-radius: 4px;
+}
+
+.debut-label {
+  font-family: monospace;
+  font-size: 0.7rem;
+  color: #718096;
+}
+
+.debut-series {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  margin: 0.2rem 0;
+}
+
+.debut-ep {
+  font-size: 0.8rem;
+  color: #a0aec0;
+}
+
+.wire-button--full {
+  width: 100%;
+  text-align: center;
+}
+
+.alien-modal__details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.alien-modal__title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #1c2723;
+  padding-bottom: 1rem;
+}
+
+.alien-modal__title-row h2 {
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.8rem;
+  color: #fff;
+  margin: 0;
+}
+
+.modal-sub {
+  font-size: 0.9rem;
+  color: #a0aec0;
+}
+
+.modal-section__heading {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--neon-green);
+  letter-spacing: 0.1em;
+  margin: 0 0 0.5rem 0;
+}
+
+.spec-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  background: #111815;
+  padding: 0.85rem;
+  border-radius: 4px;
+  border: 1px solid #1c2723;
+}
+
+.spec-grid dt {
+  font-size: 0.75rem;
+  color: #718096;
+  font-family: monospace;
+}
+
+.spec-grid dd {
+  margin: 0.15rem 0 0 0;
+  font-size: 0.9rem;
+  color: #fff;
+  font-weight: 500;
+}
+
+.modal-bio {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: #cbd5e0;
+  margin: 0;
+}
+
+.ability-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ability-tag {
+  background: rgba(57, 255, 20, 0.08);
+  border: 1px solid rgba(57, 255, 20, 0.25);
+  color: #39ff14;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.82rem;
+  font-family: monospace;
+  border-radius: 4px;
+}
+
+.modal-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.modal-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
+.modal-stat-lbl {
+  width: 90px;
+  color: #a0aec0;
+}
+
+.modal-stat-track {
+  flex: 1;
+  height: 7px;
+  background: #1a2420;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.modal-stat-bar {
+  height: 100%;
+}
+
+.modal-stat-val {
+  width: 32px;
+  text-align: right;
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   2. Alien Battle Arena
+   ========================================================================== */
+
+.arena-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.arena-stage {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media (max-width: 900px) {
+  .arena-stage {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+.arena-fighter {
+  background: #0f1513;
+  border: 1px solid var(--fighter-accent, var(--neon-green));
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.fighter-selector label {
+  display: block;
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--fighter-accent, var(--neon-green));
+  margin-bottom: 0.4rem;
+}
+
+.fighter-selector select {
+  width: 100%;
+  padding: 0.6rem;
+  background: #151d1a;
+  border: 1px solid #23302a;
+  border-radius: 4px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.fighter-visual {
+  position: relative;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, rgba(57, 255, 20, 0.08) 0%, rgba(0, 0, 0, 0.5) 80%);
+  border-radius: 6px;
+}
+
+.fighter-visual img {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.7));
+}
+
+.fighter-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-family: monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-radius: 3px;
+}
+
+.fighter-meta h3 {
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.4rem;
+  color: #fff;
+  margin: 0;
+}
+
+.fighter-meta p {
+  font-size: 0.85rem;
+  color: #a0aec0;
+  margin: 0.2rem 0 0 0;
+}
+
+.fighter-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.stat-meter {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: #a0aec0;
+}
+
+.stat-meter span:first-child { width: 35px; }
+.stat-meter span:last-child { width: 28px; text-align: right; color: #fff; font-weight: 700; }
+.stat-meter .bar {
+  flex: 1;
+  height: 6px;
+  background: #1c2723;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.stat-meter .bar div {
+  height: 100%;
+}
+
+.arena-center-hub {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.vs-emblem {
+  font-family: var(--font-display, sans-serif);
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #e53e3e;
+  text-shadow: 0 0 20px rgba(229, 62, 62, 0.6);
+}
+
+.simulate-btn {
+  padding: 0.85rem 1.75rem;
+  font-family: var(--font-display, sans-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #000;
+  background: var(--neon-green);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 0 25px rgba(57, 255, 20, 0.4);
+  transition: all 0.2s ease;
+}
+
+.simulate-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 35px rgba(57, 255, 20, 0.7);
+}
+
+.simulate-btn--active {
+  background: #ffd600;
+  box-shadow: 0 0 25px rgba(255, 214, 0, 0.5);
+}
+
+.arena-report {
+  background: #111815;
+  border: 1px solid #23302a;
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.winner-announcement {
+  border-left: 4px solid var(--win-color, var(--neon-green));
+  padding-left: 1rem;
+}
+
+.win-tag {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--neon-green);
+  letter-spacing: 0.1em;
+}
+
+.winner-announcement h3 {
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.6rem;
+  color: #fff;
+  margin: 0.3rem 0;
+}
+
+.winner-announcement p {
+  color: #cbd5e0;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.combat-log-ticker h4 {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: #718096;
+  letter-spacing: 0.1em;
+  margin: 0 0 0.6rem 0;
+}
+
+.combat-log-ticker ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.combat-log-ticker li {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #a0aec0;
+  padding: 0.4rem 0.6rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   3. Omnitrix Evolution Showcase
+   ========================================================================== */
+
+.evolution-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.evolution-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+.evolution-tab {
+  background: #111815;
+  border: 1px solid #1f2c26;
+  padding: 0.85rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.evolution-tab:hover {
+  border-color: var(--dev-accent, var(--neon-green));
+}
+
+.evolution-tab--active {
+  border-color: var(--dev-accent, var(--neon-green));
+  background: rgba(57, 255, 20, 0.08);
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+}
+
+.evolution-tab__era {
+  display: block;
+  font-family: monospace;
+  font-size: 0.72rem;
+  color: #718096;
+  margin-bottom: 0.2rem;
+}
+
+.evolution-tab__name {
+  display: block;
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+.evolution-card {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 2rem;
+  background: #0f1513;
+  border: 1px solid var(--dev-accent, var(--neon-green));
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 860px) {
+  .evolution-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+.evolution-card__era-tag {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--dev-accent, var(--neon-green));
+  letter-spacing: 0.1em;
+}
+
+.evolution-card__title {
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.8rem;
+  color: #fff;
+  margin: 0.3rem 0;
+}
+
+.evolution-card__creator {
+  font-size: 0.85rem;
+  color: #a0aec0;
+  margin: 0 0 1rem 0;
+}
+
+.evolution-card__desc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #cbd5e0;
+  margin-bottom: 1.5rem;
+}
+
+.evolution-specs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.spec-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
+.spec-label { width: 160px; color: #a0aec0; }
+.spec-val { width: 50px; text-align: right; color: #fff; font-weight: 700; }
+.spec-track {
+  flex: 1;
+  height: 7px;
+  background: #1c2723;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.spec-fill { height: 100%; }
+
+.evolution-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.feat-block h4 {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: #718096;
+  margin: 0 0 0.3rem 0;
+}
+
+.feat-block p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #fff;
+  font-weight: 600;
+}
+
+.evolution-protocols {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.protocol-box {
+  background: #141c19;
+  border-left: 3px solid var(--neon-green);
+  padding: 0.85rem 1rem;
+  border-radius: 0 4px 4px 0;
+}
+
+.protocol-box h4 {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--neon-green);
+  margin: 0 0 0.4rem 0;
+}
+
+.protocol-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: #cbd5e0;
+}
+
+.protocol-box--quirk {
+  border-left-color: #ffd600;
+}
+
+.protocol-box--quirk h4 { color: #ffd600; }
+.protocol-box--quirk p { margin: 0; font-size: 0.85rem; color: #cbd5e0; }
+
+.evolution-preview-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #23302a;
+}
+
+.evolution-preview-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+.preview-status {
+  color: var(--neon-green);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   4. Cosmic Threats & Villains Section
+   ========================================================================== */
+
+.threats-container {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 860px) {
+  .threats-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.threats-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.threat-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  background: #111815;
+  border: 1px solid #1f2c26;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.threat-btn:hover {
+  border-color: var(--threat-color, var(--threat-red));
+}
+
+.threat-btn--active {
+  border-color: var(--threat-color, var(--threat-red));
+  background: rgba(255, 51, 68, 0.08);
+}
+
+.threat-btn__indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--threat-color, var(--threat-red));
+  box-shadow: 0 0 8px var(--threat-color, var(--threat-red));
+}
+
+.threat-btn__info strong {
+  display: block;
+  font-size: 0.95rem;
+  color: #fff;
+}
+
+.threat-btn__info span {
+  display: block;
+  font-family: monospace;
+  font-size: 0.72rem;
+  color: #718096;
+}
+
+.threat-dossier {
+  background: #0f1513;
+  border: 1px solid var(--threat-color, var(--threat-red));
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+}
+
+.dossier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #23302a;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.dossier-level {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--threat-color, var(--threat-red));
+  letter-spacing: 0.1em;
+}
+
+.dossier-name {
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.8rem;
+  color: #fff;
+  margin: 0.2rem 0;
+}
+
+.dossier-title {
+  font-size: 0.9rem;
+  color: #a0aec0;
+  margin: 0;
+}
+
+.threat-score-box {
+  text-align: right;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 51, 68, 0.1);
+  border: 1px solid var(--threat-color, var(--threat-red));
+  border-radius: 6px;
+}
+
+.score-num {
+  display: block;
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: var(--threat-color, var(--threat-red));
+}
+
+.score-lbl {
+  font-family: monospace;
+  font-size: 0.65rem;
+  color: #a0aec0;
+}
+
+.dossier-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dossier-block h4 {
+  font-family: monospace;
+  font-size: 0.75rem;
+  color: var(--threat-color, var(--threat-red));
+  letter-spacing: 0.1em;
+  margin: 0 0 0.5rem 0;
+}
+
+.dossier-block p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #cbd5e0;
+  margin: 0;
+}
+
+.dossier-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: #718096;
+}
+
+.dossier-facts strong {
+  color: #fff;
+}
+
+.threat-powers-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem;
+}
+
+.threat-powers-list li {
+  font-size: 0.85rem;
+  color: #cbd5e0;
+  background: #141c19;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+}
+
+.dossier-block--weakness {
+  background: rgba(255, 214, 0, 0.05);
+  border-left: 3px solid #ffd600;
+  padding: 1rem;
+  border-radius: 0 4px 4px 0;
+}
+
+.dossier-block--weakness h4 {
+  color: #ffd600;
+}
+
+/* ==========================================================================
+   5. Azmuth 3D AI Hologram Terminal Modal
+   ========================================================================== */
+
+.azmuth-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.azmuth-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 6, 4, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.azmuth-modal__window {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #090e0c;
+  border: 1px solid var(--neon-green);
+  border-radius: 8px;
+  box-shadow: 0 0 40px rgba(57, 255, 20, 0.35);
+  display: flex;
+  flex-direction: column;
+}
+
+.azmuth-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.75rem;
+  border-bottom: 1px solid #1c2723;
+  background: #0d1412;
+}
+
+.azmuth-tag {
+  font-family: monospace;
+  font-size: 0.7rem;
+  color: var(--neon-green);
+  letter-spacing: 0.12em;
+}
+
+.azmuth-header h2 {
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.4rem;
+  color: #fff;
+  margin: 0.2rem 0 0 0;
+}
+
+.azmuth-close-btn {
+  background: transparent;
+  border: none;
+  color: #718096;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.azmuth-close-btn:hover {
+  color: #fff;
+}
+
+.azmuth-body {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  padding: 1.5rem;
+  gap: 1.75rem;
+}
+
+@media (max-width: 820px) {
+  .azmuth-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.azmuth-3d-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.azmuth-canvas-mount {
+  width: 100%;
+  height: 340px;
+  background: radial-gradient(circle, rgba(57, 255, 20, 0.15) 0%, rgba(0, 0, 0, 0.7) 80%);
+  border: 1px solid #202d28;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.azmuth-3d-tag {
+  font-family: monospace;
+  font-size: 0.68rem;
+  text-align: center;
+  color: var(--neon-green);
+  opacity: 0.8;
+  letter-spacing: 0.08em;
+}
+
+.azmuth-terminal-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.terminal-screen {
+  background: #040806;
+  border: 1px solid #1a2a22;
+  border-radius: 6px;
+  padding: 1.25rem;
+  min-height: 180px;
+}
+
+.terminal-screen__meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: monospace;
+  font-size: 0.7rem;
+  color: #4a6358;
+  margin-bottom: 0.75rem;
+}
+
+.terminal-screen__question {
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.15rem;
+  color: var(--omnitrix-glow);
+  margin: 0 0 0.3rem 0;
+}
+
+.terminal-screen__category {
+  font-family: monospace;
+  font-size: 0.72rem;
+  color: #718096;
+  margin-bottom: 0.75rem;
+}
+
+.terminal-screen__text {
+  font-family: monospace;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #cbd5e0;
+  margin: 0;
+}
+
+.terminal-cursor {
+  color: var(--neon-green);
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.azmuth-query-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.azmuth-query-input {
+  flex: 1;
+  padding: 0.65rem 0.9rem;
+  background: #111815;
+  border: 1px solid #23302a;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.88rem;
+  outline: none;
+}
+
+.azmuth-query-input:focus {
+  border-color: var(--neon-green);
+}
+
+.azmuth-query-btn {
+  padding: 0.65rem 1.1rem;
+  background: var(--neon-green);
+  color: #000;
+  font-weight: 700;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: transform 0.15s ease;
+}
+
+.azmuth-query-btn:hover {
+  transform: scale(1.04);
+}
+
+.azmuth-topics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.azmuth-topics__label {
+  font-family: monospace;
+  font-size: 0.72rem;
+  color: #718096;
+}
+
+.azmuth-topics__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.topic-chip {
+  padding: 0.35rem 0.7rem;
+  font-family: monospace;
+  font-size: 0.75rem;
+  background: #131a17;
+  border: 1px solid #23302a;
+  border-radius: 4px;
+  color: #a0aec0;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.topic-chip:hover,
+.topic-chip--active {
+  color: var(--neon-green);
+  border-color: var(--neon-green);
+  background: rgba(57, 255, 20, 0.1);
+}
+
+/* ==========================================================================
+   6. Audio Dock & Floating Azmuth Summon Pill
+   ========================================================================== */
+
+.audio-dock {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 900;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.audio-dock-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.85rem;
+  background: rgba(13, 20, 17, 0.85);
+  border: 1px solid rgba(57, 255, 20, 0.3);
+  backdrop-filter: blur(8px);
+  border-radius: 999px;
+  color: #a0aec0;
+  font-family: monospace;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.audio-dock-btn:hover,
+.audio-dock-btn--active {
+  color: #fff;
+  border-color: var(--neon-green);
+  box-shadow: 0 0 12px rgba(57, 255, 20, 0.25);
+}
+
+.floating-azmuth-pill {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 1.1rem;
+  background: rgba(13, 20, 17, 0.9);
+  border: 1px solid var(--neon-green);
+  backdrop-filter: blur(10px);
+  border-radius: 999px;
+  color: #fff;
+  font-family: var(--font-display, sans-serif);
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(57, 255, 20, 0.35);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+}
+
+.floating-azmuth-pill:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 0 30px rgba(57, 255, 20, 0.6);
+}
+
+.pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon-green);
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.azmuth-nav-btn {
+  background: rgba(57, 255, 20, 0.1) !important;
+  border-color: var(--neon-green) !important;
+  color: var(--neon-green) !important;
+}
+
+.azmuth-nav-btn:hover {
+  background: var(--neon-green) !important;
+  color: #000 !important;
+}
+
+
+/* Nav Actions Flex Container */
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .nav__actions {
+    display: none;
+  }
+}
