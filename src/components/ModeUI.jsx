@@ -5,6 +5,7 @@ import { aliens } from "../data/aliens";
 export default function ModeUI() {
   const {
     mode,
+    setMode,
     selectedAlienIndex,
     currentAlien,
     soundEnabled,
@@ -62,6 +63,26 @@ export default function ModeUI() {
         </div>
 
         <div className="mode-topbar-actions">
+          {mode === "viewer" ? (
+            <button
+              type="button"
+              className="hud-btn hud-btn--mode-toggle"
+              onClick={() => setMode("omnitrix")}
+              title="Return to Omnitrix Dial View"
+            >
+              <span>⌚ Omnitrix Dial</span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="hud-btn hud-btn--mode-toggle"
+              onClick={() => transform(selectedAlienIndex)}
+              title="Transform to Full 3D Alien"
+            >
+              <span>⚡ Full Alien 3D</span>
+            </button>
+          )}
+
           <button
             type="button"
             className={`hud-btn hud-btn--dossier ${showDossier ? "hud-btn--active" : ""}`}
@@ -203,12 +224,22 @@ export default function ModeUI() {
             type="button"
             className="slam-btn"
             style={{ "--accent": accent }}
-            onClick={() => transform(selectedAlienIndex)}
+            onClick={() => {
+              if (mode === "omnitrix") {
+                transform(selectedAlienIndex);
+              } else {
+                setMode("omnitrix");
+              }
+            }}
             disabled={isTransforming}
           >
             <span className="slam-btn__glow" />
             <span className="slam-btn__text">
-              {isTransforming ? "TRANSFORMING..." : "SLAM CORE TO TRANSFORM"}
+              {isTransforming
+                ? "TRANSFORMING..."
+                : mode === "omnitrix"
+                ? "SLAM CORE TO TRANSFORM"
+                : "⌚ RETURN TO OMNITRIX DIAL"}
             </span>
           </button>
         </div>

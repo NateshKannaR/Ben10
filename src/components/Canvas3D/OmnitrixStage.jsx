@@ -3,13 +3,17 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { useStore } from "../../store/useStore";
-import { aliens } from "../../data/aliens";
+import { aliens, ALIEN_SCALE_FACTORS } from "../../data/aliens";
+
+// Global cache for loaded GLTF alien scenes to enable instant zero-latency switching
+const glbCache = new Map();
 
 export default function OmnitrixStage() {
   const containerRef = useRef(null);
-  const { selectedAlienIndex, isTransforming } = useStore();
+  const { selectedAlienIndex, isTransforming, currentAlien } = useStore();
   const selectedIndexRef = useRef(selectedAlienIndex);
   const isTransformingRef = useRef(isTransforming);
+  const currentAlienRef = useRef(currentAlien);
 
   useEffect(() => {
     selectedIndexRef.current = selectedAlienIndex;
@@ -20,190 +24,357 @@ export default function OmnitrixStage() {
   }, [isTransforming]);
 
   useEffect(() => {
+    currentAlienRef.current = currentAlien;
+  }, [currentAlien]);
+
+  useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    // Setup Scene, Camera, Renderer
+    // 1. Scene, Camera & High-Performance WebGL Renderer
     const scene = new THREE.Scene();
 
     const camera = new THREE.PerspectiveCamera(
-      45,
+      42,
       container.clientWidth / container.clientHeight,
       0.1,
       100
     );
-    camera.position.set(0, 1.8, 3.2);
-    camera.lookAt(0, 0, 0);
+    // Camera positioned to view both the Omnitrix watch at bottom and the alien hologram above it
+    camera.position.set(0, 0.95, 3.6);
+    camera.lookAt(0, 0.52, 0);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      powerPreference: "high-performance"
+    });
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.3;
+    renderer.toneMappingExposure = 1.35;
     renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
 
-    // Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    // 2. Dynamic Sci-Fi Lighting Setup
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xa3ff8b, 2.5);
-    keyLight.position.set(3, 5, 4);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
+    keyLight.position.set(2.5, 4.5, 3.5);
     keyLight.castShadow = true;
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x00ff88, 1.8);
-    rimLight.position.set(-3, -2, -3);
+    const frontLight = new THREE.DirectionalLight(0xa3ff8b, 1.4);
+    frontLight.position.set(0, 1.0, 3.0);
+    scene.add(frontLight);
+
+    const accentColor = new THREE.Color(currentAlien?.accent || "#39ff14");
+
+    const rimLight = new THREE.SpotLight(accentColor, 4.0, 12, Math.PI / 3, 0.4);
+    rimLight.position.set(-2.5, 2.8, -2.0);
     scene.add(rimLight);
 
-    const coreLight = new THREE.PointLight(0x39ff14, 4, 6);
-    coreLight.position.set(0, 0.35, 0);
+    const coreLight = new THREE.PointLight(accentColor, 5, 5);
+    coreLight.position.set(0, 0.05, 0.25);
     scene.add(coreLight);
 
-    // Holographic Projection Beam (rising cylinder from core)
-    const beamGeo = new THREE.CylinderGeometry(0.35, 0.12, 1.8, 32, 1, true);
-    const beamMat = new THREE.MeshBasicMaterial({
-      color: 0x39ff14,
-      transparent: true,
-      opacity: 0.28,
-      side: THREE.DoubleSide,
-      blending: THREE.AdditiveBlending,
-      wireframe: false
-    });
-    const holoBeam = new THREE.Mesh(beamGeo, beamMat);
-    holoBeam.position.set(0, 0.9, 0);
-    scene.add(holoBeam);
-
-    // Hologram Rings floating above dial
-    const ringGeo1 = new THREE.RingGeometry(0.42, 0.45, 48);
-    const ringMat1 = new THREE.MeshBasicMaterial({
-      color: 0x00ff88,
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0.6,
-      blending: THREE.AdditiveBlending
-    });
-    const holoRing1 = new THREE.Mesh(ringGeo1, ringMat1);
-    holoRing1.rotation.x = -Math.PI / 2;
-    holoRing1.position.set(0, 1.2, 0);
-    scene.add(holoRing1);
-
-    const ringGeo2 = new THREE.RingGeometry(0.28, 0.30, 32);
-    const holoRing2 = new THREE.Mesh(ringGeo2, ringMat1.clone());
-    holoRing2.rotation.x = -Math.PI / 2;
-    holoRing2.position.set(0, 1.6, 0);
-    scene.add(holoRing2);
-
-    // Ambient floating energy particles
-    const particleCount = 200;
-    const particlePositions = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount; i++) {
-      particlePositions[i * 3] = (Math.random() - 0.5) * 3;
-      particlePositions[i * 3 + 1] = Math.random() * 2.5 - 0.3;
-      particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 3;
-    }
-    const particleGeo = new THREE.BufferGeometry();
-    particleGeo.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
-    const particleMat = new THREE.PointsMaterial({
-      color: 0x39ff14,
-      size: 0.035,
-      transparent: true,
-      opacity: 0.75,
-      blending: THREE.AdditiveBlending
-    });
-    const particles = new THREE.Points(particleGeo, particleMat);
-    scene.add(particles);
-
-    // GLTF / Meshopt Loader setup (100% offline)
+    // 3. Omnitrix Watch 3D Model Setup
     const gltfLoader = new GLTFLoader();
     gltfLoader.setMeshoptDecoder(MeshoptDecoder);
 
-    // Load Omnitrix Model
-    let omnitrixModel = null;
+    const omnitrixGroup = new THREE.Group();
+    omnitrixGroup.position.set(0, -0.62, 0.25);
+    // Orient watch horizontally across the screen like resting on a wrist, tilted towards the user
+    omnitrixGroup.rotation.set(0.38, Math.PI / 2, 0);
+    omnitrixGroup.scale.setScalar(0.85);
+    scene.add(omnitrixGroup);
+
+    let dialNodes = [];
+    let coreNode = null;
+    let initialCoreY = 4.1;
+
     gltfLoader.load(
       "/models/omnitrix.glb",
       (gltf) => {
-        omnitrixModel = gltf.scene;
-        omnitrixModel.position.set(0, -0.2, 0);
-        omnitrixModel.scale.setScalar(1.2);
-
-        omnitrixModel.traverse((child) => {
+        const model = gltf.scene;
+        model.traverse((child) => {
           if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
           }
+          // Identify dial parts that should rotate when selecting an alien
+          if (["face_ring", "face_disc", "wedges", "core", "dome"].includes(child.name)) {
+            dialNodes.push(child);
+          }
+          if (child.name === "core") {
+            coreNode = child;
+            initialCoreY = child.position.y || 4.1;
+          }
         });
-
-        scene.add(omnitrixModel);
+        omnitrixGroup.add(model);
       },
       undefined,
       (err) => console.warn("Could not load omnitrix.glb:", err)
     );
 
-    // Pointer interaction for subtle tilt
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetRotX = 0;
-    let targetRotY = 0;
+    // 4. Holographic Projection Chamber Setup
+    const holoChamberGroup = new THREE.Group();
+    holoChamberGroup.position.set(0, 0, 0.25);
+    scene.add(holoChamberGroup);
 
-    const handlePointerMove = (e) => {
-      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-      mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+    // Ascending Conical Light Beam
+    const beamGeo = new THREE.CylinderGeometry(0.72, 0.32, 1.85, 36, 1, true);
+    const beamMat = new THREE.MeshBasicMaterial({
+      color: accentColor,
+      transparent: true,
+      opacity: 0.24,
+      side: THREE.DoubleSide,
+      blending: THREE.AdditiveBlending
+    });
+    const holoBeam = new THREE.Mesh(beamGeo, beamMat);
+    holoBeam.position.set(0, 0.65, 0);
+    holoChamberGroup.add(holoBeam);
+
+    // Hologram Rings floating along the beam
+    const ringGeo1 = new THREE.RingGeometry(0.55, 0.65, 48);
+    const ringMat1 = new THREE.MeshBasicMaterial({
+      color: accentColor,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.55,
+      blending: THREE.AdditiveBlending
+    });
+    const holoRing1 = new THREE.Mesh(ringGeo1, ringMat1);
+    holoRing1.rotation.x = -Math.PI / 2;
+    holoRing1.position.set(0, 0.3, 0);
+    holoChamberGroup.add(holoRing1);
+
+    const ringGeo2 = new THREE.RingGeometry(0.68, 0.74, 48);
+    const holoRing2 = new THREE.Mesh(ringGeo2, ringMat1.clone());
+    holoRing2.rotation.x = -Math.PI / 2;
+    holoRing2.position.set(0, 1.35, 0);
+    holoChamberGroup.add(holoRing2);
+
+    // Orbiting Galvan DNA Energy Particles
+    const particleCount = 140;
+    const particlePositions = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount; i++) {
+      const angle = (i / particleCount) * Math.PI * 4;
+      const radius = 0.45 + (i / particleCount) * 0.3;
+      particlePositions[i * 3] = Math.cos(angle) * radius;
+      particlePositions[i * 3 + 1] = -0.1 + (i / particleCount) * 1.6;
+      particlePositions[i * 3 + 2] = Math.sin(angle) * radius;
+    }
+    const particleGeo = new THREE.BufferGeometry();
+    particleGeo.setAttribute("position", new THREE.BufferAttribute(particlePositions, 3));
+    const particleMat = new THREE.PointsMaterial({
+      color: accentColor,
+      size: 0.038,
+      transparent: true,
+      opacity: 0.75,
+      blending: THREE.AdditiveBlending
+    });
+    const particles = new THREE.Points(particleGeo, particleMat);
+    holoChamberGroup.add(particles);
+
+    // 5. Active 3D Alien Hologram Container
+    const alienHoloGroup = new THREE.Group();
+    alienHoloGroup.position.set(0, 0.72, 0.25);
+    scene.add(alienHoloGroup);
+
+    // Helper function to load and display the active alien 3D model
+    const loadAlienModel = (alienId) => {
+      // Clear previous alien model
+      while (alienHoloGroup.children.length > 0) {
+        alienHoloGroup.remove(alienHoloGroup.children[0]);
+      }
+
+      // Check cache first for instant 0ms switching
+      if (glbCache.has(alienId)) {
+        const cachedScene = glbCache.get(alienId).clone(true);
+        alienHoloGroup.add(cachedScene);
+        return;
+      }
+
+      let modelUrl = `/models/aliens/${alienId}.glb`;
+      if (alienId === "azmuth") modelUrl = "/models/azmuth.glb";
+
+      gltfLoader.load(
+        modelUrl,
+        (gltf) => {
+          const root = gltf.scene;
+          root.traverse((c) => {
+            if (c.isMesh) {
+              c.castShadow = true;
+              c.receiveShadow = true;
+            }
+          });
+
+          // Measure and center model within the holographic beam
+          const box = new THREE.Box3().setFromObject(root);
+          const size = box.getSize(new THREE.Vector3());
+          const center = box.getCenter(new THREE.Vector3());
+
+          let targetHeight = 1.35;
+          if (alienId === "grey-matter") targetHeight = 0.95;
+          else if (alienId === "four-arms") targetHeight = 1.55;
+          else if (ALIEN_SCALE_FACTORS[alienId]) {
+            targetHeight = ALIEN_SCALE_FACTORS[alienId] * 0.62;
+          }
+
+          const scale = targetHeight / (size.y || 1);
+          root.scale.setScalar(scale);
+          root.position.x = -center.x * scale;
+          root.position.y = -center.y * scale;
+          root.position.z = -center.z * scale;
+
+          const wrapper = new THREE.Group();
+          wrapper.add(root);
+
+          // Store in cache for subsequent instant swaps
+          glbCache.set(alienId, wrapper);
+
+          alienHoloGroup.add(wrapper.clone(true));
+        },
+        undefined,
+        () => {
+          // Fallback crystal hologram if GLB is missing
+          gltfLoader.load("/models/crystals.glb", (gltf) => {
+            const crystal = gltf.scene;
+            crystal.scale.setScalar(0.9);
+            alienHoloGroup.add(crystal);
+          });
+        }
+      );
     };
-    window.addEventListener("pointermove", handlePointerMove);
 
-    // Render loop
+    // Load initial alien
+    loadAlienModel(currentAlien?.id || "heatblast");
+
+    // 6. Interactive Touch & Mouse Rotation for Alien Hologram
+    let isDragging = false;
+    let prevPointerX = 0;
+    let prevPointerY = 0;
+    let manualRotY = 0;
+    let manualRotX = 0;
+    let mouseParallaxX = 0;
+    let mouseParallaxY = 0;
+
+    const onPointerDown = (e) => {
+      isDragging = true;
+      prevPointerX = e.clientX;
+      prevPointerY = e.clientY;
+    };
+
+    const onPointerMove = (e) => {
+      mouseParallaxX = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseParallaxY = -(e.clientY / window.innerHeight) * 2 + 1;
+
+      if (!isDragging) return;
+      const deltaX = e.clientX - prevPointerX;
+      const deltaY = e.clientY - prevPointerY;
+      prevPointerX = e.clientX;
+      prevPointerY = e.clientY;
+
+      manualRotY += deltaX * 0.012;
+      manualRotX = Math.max(-0.35, Math.min(0.35, manualRotX + deltaY * 0.008));
+    };
+
+    const onPointerUp = () => {
+      isDragging = false;
+    };
+
+    container.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+
+    // 7. Render Loop
     let animId;
     let clock = new THREE.Clock();
+    let currentDialAngle = 0;
+    let lastRenderedAlienId = currentAlien?.id;
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
       const time = clock.getElapsedTime();
       const transforming = isTransformingRef.current;
       const curIndex = selectedIndexRef.current;
+      const curAlien = currentAlienRef.current;
 
-      // Camera position with smooth mouse parallax
-      targetRotY = mouseX * 0.45;
-      targetRotX = 1.8 - mouseY * 0.35;
-      camera.position.x += (targetRotY * 2 - camera.position.x) * 0.05;
-      camera.position.y += (targetRotX - camera.position.y) * 0.05;
+      // Check if active alien changed -> update 3D hologram model & accent colors
+      if (curAlien && curAlien.id !== lastRenderedAlienId) {
+        lastRenderedAlienId = curAlien.id;
+        loadAlienModel(curAlien.id);
+
+        const newAccent = new THREE.Color(curAlien.accent || "#39ff14");
+        beamMat.color.copy(newAccent);
+        ringMat1.color.copy(newAccent);
+        particleMat.color.copy(newAccent);
+        rimLight.color.copy(newAccent);
+        coreLight.color.copy(newAccent);
+      }
+
+      // Smooth camera subtle parallax
+      const targetCamX = mouseParallaxX * 0.28;
+      const targetCamY = 0.95 - mouseParallaxY * 0.18;
+      camera.position.x += (targetCamX - camera.position.x) * 0.06;
+      camera.position.y += (targetCamY - camera.position.y) * 0.06;
 
       // Shake camera if currently transforming
       if (transforming) {
         camera.position.x += (Math.random() - 0.5) * 0.08;
         camera.position.y += (Math.random() - 0.5) * 0.08;
-        camera.position.z = 2.6 + Math.sin(time * 30) * 0.05;
+        camera.position.z = 3.2 + Math.sin(time * 35) * 0.06;
       } else {
-        camera.position.z += (3.2 - camera.position.z) * 0.05;
+        camera.position.z += (3.6 - camera.position.z) * 0.06;
       }
-      camera.lookAt(0, 0, 0);
+      camera.lookAt(0, 0.52, 0);
 
-      // Pulse core light & hologram beam
-      const pulse = Math.sin(time * 5);
-      coreLight.intensity = transforming ? 12 : 3.2 + pulse * 1.2;
-      beamMat.opacity = transforming ? 0.8 : 0.25 + (pulse + 1) * 0.08;
-      holoBeam.rotation.y += 0.015;
+      // Smoothly rotate ONLY the Omnitrix dial to match selected alien index
+      const targetDialAngle = ((curIndex % 10) / 10) * (Math.PI * 2);
+      currentDialAngle += (targetDialAngle - currentDialAngle) * 0.12;
+      dialNodes.forEach((node) => {
+        node.rotation.y = currentDialAngle;
+      });
 
-      // Rotate hologram rings in opposing directions
-      holoRing1.rotation.z += 0.02;
-      holoRing2.rotation.z -= 0.025;
-      holoRing1.position.y = 1.2 + Math.sin(time * 2) * 0.05;
-      holoRing2.position.y = 1.6 + Math.cos(time * 2) * 0.06;
+      // Omnitrix core depression animation when transforming
+      if (coreNode) {
+        const targetCoreY = transforming ? initialCoreY - 1.2 : initialCoreY;
+        coreNode.position.y += (targetCoreY - coreNode.position.y) * 0.25;
+      }
 
-      // Slowly float particles upwards
+      // Pulse hologram beam and lights
+      const pulse = Math.sin(time * 4.5);
+      coreLight.intensity = transforming ? 14 : 4.0 + pulse * 1.5;
+      beamMat.opacity = transforming ? 0.85 : 0.22 + (pulse + 1) * 0.06;
+      holoBeam.rotation.y += 0.01;
+
+      // Opposing hologram ring rotations
+      holoRing1.rotation.z += 0.018;
+      holoRing2.rotation.z -= 0.022;
+      holoRing1.position.y = 0.3 + Math.sin(time * 2.5) * 0.035;
+      holoRing2.position.y = 1.35 + Math.cos(time * 2.5) * 0.045;
+
+      // Ascending energy particles
       const positions = particleGeo.attributes.position.array;
       for (let i = 1; i < particleCount * 3; i += 3) {
-        positions[i] += 0.005;
-        if (positions[i] > 2.5) {
-          positions[i] = -0.3;
+        positions[i] += 0.007;
+        if (positions[i] > 1.6) {
+          positions[i] = -0.1;
         }
       }
       particleGeo.attributes.position.needsUpdate = true;
 
-      // Rotate Omnitrix dial towards target angle smoothly
-      if (omnitrixModel) {
-        const targetAngle = ((curIndex % aliens.length) / aliens.length) * (Math.PI * 2);
-        omnitrixModel.rotation.y += (targetAngle - omnitrixModel.rotation.y) * 0.12;
+      // Alien Hologram Idle Hovering & Rotation
+      alienHoloGroup.position.y = 0.72 + Math.sin(time * 2.4) * 0.038;
+      if (!isDragging) {
+        alienHoloGroup.rotation.y += 0.012;
+        alienHoloGroup.rotation.x += (0 - alienHoloGroup.rotation.x) * 0.05;
+      } else {
+        alienHoloGroup.rotation.y = manualRotY;
+        alienHoloGroup.rotation.x = manualRotX;
       }
 
       renderer.render(scene, camera);
@@ -211,6 +382,7 @@ export default function OmnitrixStage() {
 
     animate();
 
+    // 8. Viewport Resize Handler
     const handleResize = () => {
       if (!container) return;
       camera.aspect = container.clientWidth / container.clientHeight;
@@ -219,9 +391,12 @@ export default function OmnitrixStage() {
     };
     window.addEventListener("resize", handleResize);
 
+    // 9. Cleanup
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener("pointermove", handlePointerMove);
+      container.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
       window.removeEventListener("resize", handleResize);
       renderer.dispose();
       beamGeo.dispose();
