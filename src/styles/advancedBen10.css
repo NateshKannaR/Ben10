@@ -2201,3 +2201,49 @@
   color: #00e5ff !important;
   border: 1px solid rgba(0, 229, 255, 0.6) !important;
 }
+
+/* Floating Azmuth AI Trigger */
+.azmuth-floating-trigger {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: rgba(8, 18, 12, 0.88);
+  border: 1px solid rgba(57, 255, 20, 0.4);
+  border-radius: 999px;
+  color: #39ff14;
+  font-family: "Lexend Exa", "IBM Plex Mono", monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(57, 255, 20, 0.25);
+  backdrop-filter: blur(12px);
+  transition: all 0.25s ease;
+}
+
+.azmuth-floating-trigger:hover {
+  background: rgba(14, 32, 20, 0.95);
+  border-color: #39ff14;
+  box-shadow: 0 6px 25px rgba(57, 255, 20, 0.4);
+  transform: translateY(-2px);
+}
+
+.azmuth-trigger-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #39ff14;
+  box-shadow: 0 0 8px #39ff14;
+  animation: azmuth-pulse 2s infinite ease-in-out;
+}
+
+@keyframes azmuth-pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}

@@ -1,0 +1,1 @@
+import{a as e,c as t,t as n}from"./vanilla-D1FEyU8v.js";var r=t(e(),1),i=e=>e;function a(e,t=i){let n=r.useSyncExternalStore(e.subscribe,r.useCallback(()=>t(e.getState()),[e,t]),()=>t(e.getInitialState()));return r.useDebugValue(n),n}var o=e=>{let t=n(e),r=e=>a(t,e);return Object.assign(r,t),r},s=(e=>e?o(e):o);export{s as t};
