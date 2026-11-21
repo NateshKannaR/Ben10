@@ -5,12 +5,10 @@ import sound from "../audio/soundEngine";
 const NAV_LINKS = [
   { id: "home", label: "Home" },
   { id: "heroes", label: "Heroes" },
-  { id: "archive", label: "Archive" },
-  { id: "arena", label: "Arena" },
   { id: "omnitrix", label: "Omnitrix" },
-  { id: "evolution", label: "Evolution" },
-  { id: "threats", label: "Villains" },
-  { id: "chronology", label: "Timeline" }
+  { id: "series", label: "Series" },
+  { id: "chronology", label: "Timeline" },
+  { id: "lab", label: "Features" }
 ];
 
 export default function Navigation({ onOpenAzmuth }) {

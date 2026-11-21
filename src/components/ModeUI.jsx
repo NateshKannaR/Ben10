@@ -70,7 +70,7 @@ export default function ModeUI() {
               onClick={() => setMode("omnitrix")}
               title="Return to Omnitrix Dial View"
             >
-              <span>⌚ Omnitrix Dial</span>
+              <span>Omnitrix Dial</span>
             </button>
           ) : (
             <button
@@ -79,7 +79,7 @@ export default function ModeUI() {
               onClick={() => transform(selectedAlienIndex)}
               title="Transform to Full 3D Alien"
             >
-              <span>⚡ Full Alien 3D</span>
+              <span>Full Alien 3D</span>
             </button>
           )}
 
@@ -89,7 +89,7 @@ export default function ModeUI() {
             onClick={() => setShowDossier(!showDossier)}
             title="Toggle Alien DNA Dossier"
           >
-            <span>{showDossier ? "✕ Close Stats" : "📊 Alien Stats"}</span>
+            <span>{showDossier ? "✕ Close Stats" : "Alien Stats"}</span>
           </button>
 
           <button

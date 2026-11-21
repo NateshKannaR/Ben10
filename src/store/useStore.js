@@ -38,22 +38,19 @@ export const actions = {
 
   selectAlien(index) {
     if (typeof index !== "number" || isNaN(index)) index = 0;
-    if (index < 0) index = allAliens.length - 1;
-    if (index >= allAliens.length) index = 0;
+    if (index < 0) index = aliens.length - 1;
+    if (index >= aliens.length) index = 0;
     state.selectedAlienIndex = index;
-    state.bezelAngle = (index / 10) * (Math.PI * 2);
-    sound.click();
+    state.bezelAngle = (index / aliens.length) * (Math.PI * 2);
     notify();
   },
 
   nextAlien() {
-    const max = state.selectedAlienIndex < 10 ? 10 : allAliens.length;
-    actions.selectAlien((state.selectedAlienIndex + 1) % max);
+    actions.selectAlien((state.selectedAlienIndex + 1) % aliens.length);
   },
 
   prevAlien() {
-    const max = state.selectedAlienIndex < 10 ? 10 : allAliens.length;
-    actions.selectAlien((state.selectedAlienIndex - 1 + max) % max);
+    actions.selectAlien((state.selectedAlienIndex - 1 + aliens.length) % aliens.length);
   },
 
   toggleSound() {

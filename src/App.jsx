@@ -2,11 +2,7 @@ import React, { useState } from "react";
 import Navigation from "./components/Navigation";
 import Hero from "./components/Hero";
 import HeroesSection from "./components/HeroesSection";
-import AlienArchive from "./components/AlienArchive";
-import AlienArena from "./components/AlienArena";
 import OmnitrixSection from "./components/OmnitrixSection";
-import OmnitrixEvolution from "./components/OmnitrixEvolution";
-import VillainsSection from "./components/VillainsSection";
 import SeriesTimeline from "./components/SeriesTimeline";
 import FeaturesGrid from "./components/FeaturesGrid";
 import Footer from "./components/Footer";
@@ -35,7 +31,7 @@ export default function App() {
         onClose={() => setIsAzmuthOpen(false)}
       />
 
-      {/* Persistent Audio Dock for Theme Music & SFX */}
+      {/* Persistent Audio Dock for Theme Music */}
       <AudioPlayer />
 
       {/* Main Website Presentation */}
@@ -44,13 +40,9 @@ export default function App() {
         <main>
           <Hero />
           <HeroesSection />
-          <AlienArchive />
-          <AlienArena />
           <OmnitrixSection />
-          <OmnitrixEvolution />
-          <VillainsSection />
           <SeriesTimeline />
-          <FeaturesGrid onOpenAzmuth={() => setIsAzmuthOpen(true)} />
+          <FeaturesGrid />
         </main>
         <Footer />
       </div>
