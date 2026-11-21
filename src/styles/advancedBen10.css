@@ -2247,3 +2247,9 @@
   0%, 100% { opacity: 0.4; transform: scale(0.85); }
   50% { opacity: 1; transform: scale(1.15); }
 }
+
+/* User preference: Remove hero text overlays so only background & character imagery are shown */
+.hero__title {
+  display: none !important;
+}
+
