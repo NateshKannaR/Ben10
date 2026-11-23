@@ -2253,3 +2253,21 @@
   display: none !important;
 }
 
+
+.studio-launch {
+  position: fixed;
+  right: 24px;
+  bottom: 74px;
+  z-index: 99998;
+  padding: 10px 18px;
+  border: 1px solid #b8ff65;
+  border-radius: 999px;
+  background: #b8ff65;
+  color: #13200f;
+  box-shadow: 0 4px 20px #0009;
+  font: 700 .9rem/1.4 system-ui, sans-serif;
+  text-decoration: none;
+}
+
+.studio-launch:hover { background: #d5ffa4; }
+.studio-launch:focus-visible { outline: 2px solid white; outline-offset: 4px; }

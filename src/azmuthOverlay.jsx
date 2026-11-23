@@ -8,6 +8,7 @@ function AzmuthOverlay() {
 
   return (
     <>
+      <a className="studio-launch" href="./studio.html">3D Studio</a>
       <button
         type="button"
         className="azmuth-floating-trigger"

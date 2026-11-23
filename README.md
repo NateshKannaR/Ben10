@@ -4,6 +4,9 @@ An interactive 3D web experience celebrating Ben 10 and the Omnitrix. Built with
 
 ## Features
 
+- **Omnitrix 3D Studio**: Open **3D Studio** from the homepage or visit `/studio.html`. Scrub the prototype's exploded assembly, scan the available character models, and orbit procedural interpretations of their homeworlds. The viewport supports drag, pinch, and keyboard orbit and zoom.
+- **Classic continuity archive**: Covers the original ten and Cannonbolt as a later unlock, with episode debuts and linked references. Ghostfreak has a dossier and homeworld scene. The repository does not include a Ghostfreak character model.
+
 - **Interactive 3D Omnitrix**: Full WebGL 3D model with rotating bezel, pop-up core, glowing green DNA projector, and click sounds.
 - **10 Original Aliens + Ben Tennyson**: 3D GLTF models, species info, planet lore, powers, and combat stat meters.
 - **Synthesized Omnitrix Audio**: Pure Web Audio API procedural sound engine with real-time oscillators, noise bursts, filters, and transformation charges (no external audio file dependencies).
@@ -31,7 +34,7 @@ npm run build
 npm run preview
 ```
 
-Or serve with Python without any node dependencies:
+After building, you can also serve the generated site with Python:
 
 ```bash
 python3 serve.py 3000

@@ -7,7 +7,8 @@ Run: python3 serve.py [port]
 import http.server
 import socketserver
 import sys
-import webbrowser
+from functools import partial
+from pathlib import Path
 
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 3000
 
@@ -18,7 +19,11 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
 def main():
-    with socketserver.TCPServer(("", PORT), Handler) as httpd:
+    site = Path(__file__).resolve().parent / "dist"
+    if not (site / "index.html").is_file():
+        sys.exit("Run npm run build before starting the Python server.")
+    handler = partial(Handler, directory=str(site))
+    with socketserver.TCPServer(("", PORT), handler) as httpd:
         url = f"http://localhost:{PORT}"
         print(f"\n=======================================================")
         print(f" Ben 10: Omnitrix Experience local server running!")
